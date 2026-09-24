@@ -309,7 +309,7 @@ function QuestionsPage() {
 
         {/* Düzenleyici */}
         <main className="min-h-0 flex-1 overflow-y-auto bg-gradient-to-b from-kh-bg to-kh-bg-deep p-5 sm:p-10">
-          <div className="mx-auto w-full max-w-3xl pb-10 pt-8">
+          <div className="mx-auto w-full max-w-3xl pb-10">
             {error && (
               <p className="mb-4 rounded-2xl bg-white/20 px-4 py-3 text-sm font-extrabold text-white">
                 {error}
@@ -321,82 +321,74 @@ function QuestionsPage() {
               </p>
             )}
 
-            {/* Soru metni bölümü */}
-            <section className="rounded-3xl bg-white/5 p-5 sm:p-6">
-              <p className="text-xs font-extrabold uppercase tracking-[0.25em] text-white/70">
-                {draftMode ? "Yeni Soru" : `${(selectedIndex >= 0 ? selectedIndex : 0) + 1}. Soru`}
-              </p>
-              <textarea
-                value={form.question}
-                onChange={(e) => set("question", e.target.value)}
-                rows={2}
-                placeholder="Sorunuzu buraya yazın"
-                className="mt-3 w-full resize-none rounded-2xl bg-white px-6 py-5 text-xl font-extrabold text-foreground shadow-[0_10px_30px_-12px_oklch(0.1_0.1_296_/_0.5)] outline-none placeholder:text-muted-foreground/60 sm:text-2xl"
-              />
-            </section>
+            <p className="text-xs font-extrabold uppercase tracking-[0.25em] text-white/70">
+              {draftMode ? "Yeni Soru" : `${(selectedIndex >= 0 ? selectedIndex : 0) + 1}. Soru`}
+            </p>
 
-            {/* Cevap seçenekleri bölümü */}
-            <section className="mt-8 rounded-3xl bg-white/5 p-5 sm:p-6">
-              <p className="text-xs font-extrabold uppercase tracking-[0.25em] text-white/70">
-                Cevap Seçenekleri
-              </p>
-              <div className="mt-4 grid gap-5 sm:grid-cols-2">
-                {LETTERS.map((l, i) => {
-                  const key = `option_${l.toLowerCase()}` as "option_a";
-                  const value = form[key];
-                  const correct = form.correct_answer === l;
-                  const optional = i >= 2;
-                  return (
-                    <div
-                      key={l}
-                      className={`flex items-center gap-3 rounded-2xl bg-white p-4 shadow-[0_6px_0_oklch(0.1_0.05_296_/_0.3)] transition ${
+            <textarea
+              value={form.question}
+              onChange={(e) => set("question", e.target.value)}
+              rows={2}
+              placeholder="Sorunuzu buraya yazın"
+              className="mt-3 w-full resize-none rounded-2xl bg-white px-6 py-5 text-xl font-extrabold text-foreground shadow-[0_10px_30px_-12px_oklch(0.1_0.1_296_/_0.5)] outline-none placeholder:text-muted-foreground/60 sm:text-2xl"
+            />
+
+            <div className="mt-5 grid gap-4 sm:grid-cols-2">
+              {LETTERS.map((l, i) => {
+                const key = `option_${l.toLowerCase()}` as "option_a";
+                const value = form[key];
+                const correct = form.correct_answer === l;
+                const optional = i >= 2;
+                return (
+                  <div
+                    key={l}
+                    className={`flex items-center gap-3 rounded-2xl bg-white p-3 shadow-[0_6px_0_oklch(0.1_0.05_296_/_0.3)] transition ${
+                      correct ? "ring-4 ring-foreground/70" : ""
+                    }`}
+                  >
+                    <button
+                      type="button"
+                      aria-label={`${l} doğru cevap`}
+                      disabled={!value.trim()}
+                      onClick={() => set("correct_answer", l)}
+                      className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-xl text-3xl leading-none text-white drop-shadow transition disabled:cursor-not-allowed disabled:opacity-40 ${OPT_BG[l]} ${
                         correct ? "ring-4 ring-foreground/70" : ""
                       }`}
                     >
-                      <button
-                        type="button"
-                        aria-label={`${l} doğru cevap`}
-                        disabled={!value.trim()}
-                        onClick={() => set("correct_answer", l)}
-                        className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-xl text-3xl leading-none text-white drop-shadow transition disabled:cursor-not-allowed disabled:opacity-40 ${OPT_BG[l]} ${
-                          correct ? "ring-4 ring-foreground/70" : ""
-                        }`}
-                      >
-                        {SHAPES[l]}
-                      </button>
-                      <input
-                        value={value}
-                        onChange={(e) => {
-                          set(key, e.target.value);
-                          // Doğru işaretli seçeneğin metni silinirse işareti A'ya al
-                          if (correct && !e.target.value.trim()) set("correct_answer", "A");
-                        }}
-                        placeholder={optional ? `Cevap ${i + 1} (isteğe bağlı)` : `Cevap ${i + 1}`}
-                        className="w-full min-w-0 bg-transparent text-base font-extrabold text-foreground outline-none placeholder:text-muted-foreground/60 sm:text-lg"
-                      />
-                      <button
-                        type="button"
-                        aria-label={`${l} doğru cevap işaretle`}
-                        disabled={!value.trim()}
-                        onClick={() => set("correct_answer", l)}
-                        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-[3px] text-base font-extrabold transition disabled:opacity-30 ${
-                          correct
-                            ? "border-foreground bg-foreground text-background"
-                            : "border-border text-transparent hover:border-foreground/60"
-                        }`}
-                      >
-                        ✓
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
+                      {SHAPES[l]}
+                    </button>
+                    <input
+                      value={value}
+                      onChange={(e) => {
+                        set(key, e.target.value);
+                        // Doğru işaretli seçeneğin metni silinirse işareti A'ya al
+                        if (correct && !e.target.value.trim()) set("correct_answer", "A");
+                      }}
+                      placeholder={optional ? `Cevap ${i + 1} (isteğe bağlı)` : `Cevap ${i + 1}`}
+                      className="w-full min-w-0 bg-transparent text-base font-extrabold text-foreground outline-none placeholder:text-muted-foreground/60 sm:text-lg"
+                    />
+                    <button
+                      type="button"
+                      aria-label={`${l} doğru cevap işaretle`}
+                      disabled={!value.trim()}
+                      onClick={() => set("correct_answer", l)}
+                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-[3px] text-base font-extrabold transition disabled:opacity-30 ${
+                        correct
+                          ? "border-foreground bg-foreground text-background"
+                          : "border-border text-transparent hover:border-foreground/60"
+                      }`}
+                    >
+                      ✓
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
 
-              <p className="mt-4 text-xs font-extrabold text-white/70">
-                Doğru cevabı seçmek için renkli kutuya veya ✓ düğmesine dokun. İlk iki cevap zorunlu,
-                3. ve 4. cevap isteğe bağlı.
-              </p>
-            </section>
+            <p className="mt-4 text-xs font-extrabold text-white/70">
+              Doğru cevabı seçmek için renkli kutuya veya ✓ düğmesine dokun. İlk iki cevap zorunlu,
+              3. ve 4. cevap isteğe bağlı.
+            </p>
 
             <div className="mt-8 flex items-center justify-end gap-3">
               {!draftMode && selectedId && (
