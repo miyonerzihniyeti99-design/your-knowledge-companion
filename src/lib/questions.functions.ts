@@ -172,11 +172,32 @@ export const addQuestion = createServerFn({ method: "POST" })
         .maybeSingle();
       targetSetId = firstSet?.id ?? null;
     }
-    const { error } = await supabase
+    const { data: row, error } = await supabase
       .from("questions")
-      .insert({ ...fields, category: fields.category ?? "Genel Kültür", set_id: targetSetId });
-    if (error) throw new Error("Soru kaydedilemedi");
-    return { ok: true };
+      .insert({ ...fields, category: fields.category ?? "Genel Kültür", set_id: targetSetId })
+      .select("id")
+      .maybeSingle();
+    if (error || !row) throw new Error("Soru kaydedilemedi");
+    return { id: row.id };
+  });
+
+export const duplicateQuestion = createServerFn({ method: "POST" })
+  .inputValidator((data: { id: string }) => ({ id: String(data.id) }))
+  .handler(async ({ data }) => {
+    const supabase = await db();
+    const { data: src, error: readError } = await supabase
+      .from("questions")
+      .select("question, option_a, option_b, option_c, option_d, correct_answer, category, difficulty, time_limit, set_id")
+      .eq("id", data.id)
+      .maybeSingle();
+    if (readError || !src) throw new Error("Soru bulunamadı");
+    const { data: row, error } = await supabase
+      .from("questions")
+      .insert(src)
+      .select("id")
+      .maybeSingle();
+    if (error || !row) throw new Error("Soru kopyalanamadı");
+    return { id: row.id };
   });
 
 
