@@ -333,7 +333,7 @@ function QuestionsPage() {
               className="mt-3 w-full resize-none rounded-2xl bg-white px-6 py-5 text-xl font-extrabold text-foreground shadow-[0_10px_30px_-12px_oklch(0.1_0.1_296_/_0.5)] outline-none placeholder:text-muted-foreground/60 sm:text-2xl"
             />
 
-            <div className="mt-12 grid gap-4 sm:grid-cols-2">
+            <div className="mt-24 grid gap-4 sm:grid-cols-2">
               {LETTERS.map((l, i) => {
                 const key = `option_${l.toLowerCase()}` as "option_a";
                 const value = form[key];
