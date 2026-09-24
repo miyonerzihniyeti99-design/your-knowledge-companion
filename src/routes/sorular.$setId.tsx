@@ -342,8 +342,8 @@ function QuestionsPage() {
                 return (
                   <div
                     key={l}
-                    className={`flex items-center gap-3 rounded-2xl bg-white p-3 shadow-[0_6px_0_oklch(0.1_0.05_296_/_0.3)] transition ${
-                      correct ? "ring-4 ring-foreground/70" : ""
+                    className={`flex items-center gap-3 rounded-2xl p-3 shadow-[0_6px_0_oklch(0.1_0.05_296_/_0.3)] transition ${OPT_BG[l]} ${
+                      correct ? "ring-4 ring-white" : ""
                     }`}
                   >
                     <button
@@ -351,8 +351,8 @@ function QuestionsPage() {
                       aria-label={`${l} doğru cevap`}
                       disabled={!value.trim()}
                       onClick={() => set("correct_answer", l)}
-                      className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-xl text-3xl leading-none text-white drop-shadow transition disabled:cursor-not-allowed disabled:opacity-40 ${OPT_BG[l]} ${
-                        correct ? "ring-4 ring-foreground/70" : ""
+                      className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-white/25 text-3xl leading-none text-white drop-shadow transition disabled:cursor-not-allowed ${
+                        correct ? "ring-4 ring-white" : ""
                       }`}
                     >
                       {SHAPES[l]}
@@ -365,7 +365,7 @@ function QuestionsPage() {
                         if (correct && !e.target.value.trim()) set("correct_answer", "A");
                       }}
                       placeholder={optional ? `Cevap ${i + 1} (isteğe bağlı)` : `Cevap ${i + 1}`}
-                      className="w-full min-w-0 bg-transparent text-base font-extrabold text-foreground outline-none placeholder:text-muted-foreground/60 sm:text-lg"
+                      className="w-full min-w-0 bg-transparent text-base font-extrabold text-white outline-none placeholder:text-white/70 sm:text-lg"
                     />
                     <button
                       type="button"
@@ -374,8 +374,8 @@ function QuestionsPage() {
                       onClick={() => set("correct_answer", l)}
                       className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-[3px] text-base font-extrabold transition disabled:opacity-30 ${
                         correct
-                          ? "border-foreground bg-foreground text-background"
-                          : "border-border text-transparent hover:border-foreground/60"
+                          ? "border-white bg-white text-foreground"
+                          : "border-white/70 text-transparent hover:border-white"
                       }`}
                     >
                       ✓
